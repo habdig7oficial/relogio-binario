@@ -2,49 +2,55 @@ package main
 
 import (
     "machine"
-    "time"
+    //"time"
+
 )
 
-func to_binary(value uint){
-	for ; value > 0;
-	{
-		print (value & 1)
-		value >>= 1
-	} 
+func to_binary(value uint, mask uint) ([6]int){
 
-	//for ;bits >= 0; bits-- {
-	//	aux := value >> bits
-	//	println("aux ", aux)
-		//if ((aux) & 1){
-		//	println(1)
-		//} else {
-		//	println(0)
-		//}
-	//}
+	arr := [6]int{}
 
+	for i := 0 ; mask > 0 ; i++{
+		if ((value & mask) > 0){
+			//print (1)
+			arr[i] = 1
+		} else {
+			//print (0)
+			arr[i] = 0
+		}
+		mask >>= 1
+	}
+	//println("")
+
+	return arr
 }
 
 func main() {
 	horas_led := []machine.Pin{ machine.D53, machine.D52, machine.D51, machine.D50, machine.D49 }
+	minutos_led := []machine.Pin{ machine.D43, machine.D42, machine.D41, machine.D40, machine.D39, machine.D38,}
+
 	for i:=0; i < len(horas_led); i++ {
 		horas_led[i].Configure(machine.PinConfig{Mode: machine.PinOutput})
+	}
+	for i:=0; i < len(minutos_led); i++ {
+		minutos_led[i].Configure(machine.PinConfig{Mode: machine.PinOutput})
 	}
 
 
     for {
-		for i := 0; i< len(horas_led); i++{
-			horas_led[i].Low()
-			time.Sleep(time.Millisecond * 500)
-	
-			horas_led[i].High()
-			time.Sleep(time.Millisecond * 500)
-		} 
+		//		b_arr := to_binary(10, 0x20)
+		b_arr := to_binary(10, 0x10)
 
-		to_binary(25)
+		for i := 0; i < len(b_arr); i++ {
 
-		for i := 0; i< len(horas_led); i++{
-			horas_led[i].Low()
-		} 
+			if b_arr[i] == 1 {
+				horas_led[i].High()
+			}  
+			println( b_arr[i] )
+		}
+		println("")
+
+		minutos_led[5].High()
     }
 }
 //tinygo flash --port /dev/ttyUSB0 --target arduino-mega2560 -monitor  -baudrate 9600 trigger.go 
