@@ -2,7 +2,7 @@ package main
 
 import (
     "machine"
-    //"time"
+    "time"
 
 )
 
@@ -38,19 +38,29 @@ func main() {
 
 
     for {
+
+
 		//		b_arr := to_binary(10, 0x20)
-		b_arr := to_binary(10, 0x10)
+		b_arr := to_binary(7, 0x10)
 
 		for i := 0; i < len(b_arr); i++ {
 
 			if b_arr[i] == 1 {
 				horas_led[i].High()
 			}  
-			println( b_arr[i] )
+			//println( b_arr[i] )
 		}
 		println("")
 
-		minutos_led[5].High()
+		b_arr = to_binary(31, 0x20)
+		for i := 0; i < len(b_arr); i++ {
+
+			if b_arr[i] == 1 {
+				minutos_led[i].High()
+			}  
+			//println( b_arr[i] )
+		}
+		println(time.Now().UTC().String())
     }
 }
 //tinygo flash --port /dev/ttyUSB0 --target arduino-mega2560 -monitor  -baudrate 9600 trigger.go 
